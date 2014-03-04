@@ -1,17 +1,18 @@
 # Set window root path. Default is `$session_root`.
 # Must be called before `new_window`.
-#window_root "~/Work/{{WINDOW_NAME}}"
+window_root "~/Work/learning/koans"
 
 # Create new window. If no argument is given, window name will be based on
 # layout file name.
-new_window "{{WINDOW_NAME}}"
+new_window "koans"
 
-# Split window into panes; The % specified applies to the new window created
-#split_v 20 # Split the window with a horizontal line
-#split_v 20 1 # Split the second pane that was created with the split above into 2 again
-#split_h 50 # Disect the window with a vertical line
+# Split window into panes.
+split_h 40
+split_v 20
 
-
+run_cmd "vim ~/Work/learning/koans" 0
+run_cmd "watchr ~/Work/learning/koans/koans.watchr" 1
+run_cmd "irb"
 
 # Run commands.
 #run_cmd "top"     # runs in active pane

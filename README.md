@@ -5,7 +5,7 @@ and pane configurations with ease.
 
 In short, Tmuxifier allows you to easily create, edit, and load "layout"
 files, which are simple shell scripts where you use the `tmux` command and
-helper commands provided by tmuxifier to manage Tmux sessions and windows
+helper commands provided by `tmuxifier` to manage Tmux sessions and windows
 
 ### Window Layouts
 
@@ -54,19 +54,25 @@ Clone the repo to your machine:
 
     git clone https://github.com/jimeh/tmuxifier.git ~/.tmuxifier
 
-Then add `~/.tmuxifier/bin` to your PATH to make the `tmuxifier` executable
+Then add `$HOME/.tmuxifier/bin` to your PATH to make the `tmuxifier` executable
 available to you:
 
 __In bash & zsh:__
 
 ```bash
-export PATH="~/.tmuxifier/bin:$PATH"
+export PATH="$HOME/.tmuxifier/bin:$PATH"
 ```
 
 __In tcsh:__
 
 ```tcsh
 set path = ( "~/.tmuxifier/bin" $path )
+```
+
+__In fish:__
+
+```bash
+set -gx PATH "~/.tmuxifier/bin" $PATH
 ```
 
 ### Custom Installation Path
@@ -94,10 +100,37 @@ Add the following to your `~/.cshrc`, `~/.tcshrc` or equivalent:
 eval `tmuxifier init -`
 ```
 
+__In fish:__
+
+And add the following to your `~/.config/fish/config.fish` or equivalent:
+
+```bash
+eval (tmuxifier init -)
+```
+
+### Custom Tmux Arguments
+
+If you need to pass custom arguments to `tmux` itself, you can do so by
+setting the `TMUXIFIER_TMUX_OPTS` environment variable. For example to set
+custom arguments globally:
+
+```bash
+export TMUXIFIER_TMUX_OPTS="-L my-awesome-socket-name"
+eval "$(tmuxifier init -)"
+```
+
+And/or specify dynamically when calling `tmuxifier`:
+
+```bash
+TMUXIFIER_TMUX_OPTS="-L other-session" tmuxifier load-session welcome
+```
+
 ## Updating
 
-    cd ~/.tmuxifier
-    git pull
+```bash
+cd ~/.tmuxifier # or where you've cloned tmuxifier to
+git pull
+```
 
 ## Usage
 
@@ -162,8 +195,8 @@ export TMUXIFIER_LAYOUT_PATH="$HOME/.tmux-layouts"
 
 ### Disable Shell-Completion
 
-Tmuxifier comes with shell-completion for bash, zsh and tcsh. If for any
-reason you need to disable it, just set `$TMUXIFIER_NO_COMPLETE`.
+Tmuxifier comes with shell-completion for bash, zsh, tcsh, and fish. If for
+any reason you need to disable it, just set `$TMUXIFIER_NO_COMPLETE`.
 
 ```bash
 export TMUXIFIER_NO_COMPLETE=1
@@ -202,7 +235,7 @@ it does set itself apart in a number of ways:
 
 (The MIT license)
 
-Copyright (c) 2013 Jim Myhrberg.
+Copyright (c) 2014 Jim Myhrberg.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

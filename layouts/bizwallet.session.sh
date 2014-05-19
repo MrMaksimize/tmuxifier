@@ -1,16 +1,16 @@
 # Set a custom session root path. Default is `$HOME`.
 # Must be called before `initialize_session`.
-session_root "~/Code/fundme"
+session_root "~/Code/bizwallet"
 
 # Create session with specified name if it does not already exist. If no
 # argument is given, session name will be based on layout file name.
-if initialize_session "fundme"; then
+if initialize_session "bizwallet"; then
 
   # Create a new window inline within session layout definition.
   #new_window "misc"
 
   # Load a defined window layout.
-  load_window "fundme"
+  load_window "bizwallet"
   new_window "test"
   load_window "mongo"
   new_window "shell"

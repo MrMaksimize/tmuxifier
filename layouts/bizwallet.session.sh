@@ -12,8 +12,9 @@ if initialize_session "bizwallet"; then
   # Load a defined window layout.
   load_window "bizwallet"
   new_window "test"
-  load_window "mongo"
   new_window "shell"
+  load_window "elasticsearch"
+  load_window "mongo"
 
   # Select the default active window on session creation.
   #select_window 1

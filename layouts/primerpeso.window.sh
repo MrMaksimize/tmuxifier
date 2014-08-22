@@ -1,10 +1,10 @@
 # Set window root path. Default is `$session_root`.
 # Must be called before `new_window`.
-window_root "~/Code/bizwallet"
+window_root "~/Code/primerpeso"
 
 # Create new window. If no argument is given, window name will be based on
 # layout file name.
-new_window "bizwallet"
+new_window "primerpeso"
 
 # Split window into panes.
 #split_v 20 # Split the window with a horizontal line
@@ -19,7 +19,7 @@ split_h 50 1
 #run_cmd "date" 1  # runs in pane 1
 
 run_cmd "vim app.js" 0
-run_cmd "sleep 4 && nodemon app.js" 2
+run_cmd "sleep 4 && gulp" 2
 #run_cmd "cd ~/Code/" 1
 #run_cmd "cd ~/Code/" 2
 # Paste text

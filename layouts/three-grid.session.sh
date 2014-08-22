@@ -11,6 +11,7 @@ if initialize_session "three-grid"; then
 
   # Load a defined window layout.
   load_window "three-grid"
+  new_window "shell"
 
   # Select the default active window on session creation.
   #select_window 1

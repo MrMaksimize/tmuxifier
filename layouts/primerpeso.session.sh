@@ -1,16 +1,16 @@
 # Set a custom session root path. Default is `$HOME`.
 # Must be called before `initialize_session`.
-session_root "~/Code/bizwallet"
+session_root "~/Code/primerpeso"
 
 # Create session with specified name if it does not already exist. If no
 # argument is given, session name will be based on layout file name.
-if initialize_session "bizwallet"; then
+if initialize_session "primerpeso"; then
 
   # Create a new window inline within session layout definition.
   #new_window "misc"
 
   # Load a defined window layout.
-  load_window "bizwallet"
+  load_window "primerpeso"
   new_window "shell"
 
   # Select the default active window on session creation.

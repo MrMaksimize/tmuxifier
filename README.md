@@ -1,4 +1,4 @@
-# Tmuxifier
+# Tmuxifier [![Build Status](https://api.travis-ci.org/jimeh/tmuxifier.svg)](https://travis-ci.org/jimeh/tmuxifier)
 
 Tmuxify your Tmux. Create, edit, manage and load complex Tmux session, window
 and pane configurations with ease.
@@ -122,7 +122,7 @@ eval "$(tmuxifier init -)"
 And/or specify dynamically when calling `tmuxifier`:
 
 ```bash
-TMUXIFIER_TMUX_OPTS="-L other-session" tmuxifier load-session welcome
+TMUXIFIER_TMUX_OPTS="-L other-socket" tmuxifier load-session welcome
 ```
 
 ## Updating

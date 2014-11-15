@@ -18,11 +18,11 @@ tmux() {
 #   - $2: (optional) Shell command to execute when window is created.
 #
 new_window() {
-  if [ -n "$1" ]; then window="$1"; fi
+  if [ -n "$1" ]; then local winarg=(-n "$1"); fi
   if [ -n "$2" ]; then local command=("$2"); fi
-  if [ -n "$window" ]; then local winarg=(-n "$window"); fi
 
   tmuxifier-tmux new-window -t "$session:" "${winarg[@]}" "${command[@]}"
+  window="$(__get_current_window_index)"
   __go_to_window_or_session_path
 }
 
@@ -89,6 +89,7 @@ clock() {
 #
 select_window() {
   tmuxifier-tmux select-window -t "$session:$1"
+  window="$(__get_current_window_index)"
 }
 
 # Select a specific pane in the current window.
@@ -232,40 +233,40 @@ initialize_session() {
   tmuxifier-tmux start-server
 
   # Check if the named session already exists.
-  if ! tmuxifier-tmux has-session -t "$session:" 2>/dev/null; then
-    if [ "$(tmuxifier-tmux-version "1.9")" == "<" ]; then
-      # Tmux 1.8 and earlier.
+  if tmuxifier-tmux has-session -t "$session:" 2>/dev/null; then
+    return 1
+  fi
 
-      # Create the new session.
-      env TMUX="" tmuxifier-tmux new-session -d -s "$session"
+  # Tmux 1.8 and earlier.
+  if [ "$(tmuxifier-tmux-version "1.9")" == "<" ]; then
+    # Create the new session.
+    env TMUX="" tmuxifier-tmux new-session -d -s "$session"
 
-      # Set default-path for session
-      if [ -n "$session_root" ] && [ -d "$session_root" ]; then
-        cd "$session_root"
+    # Set default-path for session
+    if [ -n "$session_root" ] && [ -d "$session_root" ]; then
+      cd "$session_root"
 
-        $set_default_path && tmuxifier-tmux \
-          set-option -t "$session:" \
-          default-path "$session_root" 1>/dev/null
-      fi
-    else
-      # Tmux 1.9 and later.
-      if $set_default_path; then local session_args=(-c "$session_root"); fi
-      env TMUX="" tmuxifier-tmux new-session \
-        -d -s "$session" "${session_args[@]}"
+      $set_default_path && tmuxifier-tmux \
+        set-option -t "$session:" \
+        default-path "$session_root" 1>/dev/null
     fi
 
-    # In order to ensure only specified windows are created, we move the
-    # default window to position 999, and later remove it with the
-    # `finalize_and_go_to_session` function.
-    local first_window_index=$(__get_first_window_index)
-    tmuxifier-tmux move-window \
-      -s "$session:$first_window_index" -t "$session:999"
+  # Tmux 1.9 and later.
+  else
+    if $set_default_path; then
+      local session_args=(-c "$session_root")
+    fi
 
-    # Session created, return ok exit status.
-    return 0
+    env TMUX="" tmuxifier-tmux new-session \
+      -d -s "$session" "${session_args[@]}"
   fi
-  # Session already existed, return error exit status.
-  return 1
+
+  # In order to ensure only specified windows are created, we move the
+  # default window to position 999, and later remove it with the
+  # `finalize_and_go_to_session` function.
+  local first_window_index=$(__get_first_window_index)
+  tmuxifier-tmux move-window \
+    -s "$session:$first_window_index" -t "$session:999"
 }
 
 # Finalize session creation and then switch to it if needed.
@@ -275,8 +276,7 @@ initialize_session() {
 # a window that was not explicitly created. Hence we kill it.
 #
 # If the session was created, we've already been switched to it. If it was not
-# created, the session already exists, and we'll need to specifically switch
-# to it here.
+# created, but already existed, then we'll need to specifically switch to it.
 #
 finalize_and_go_to_session() {
   ! tmuxifier-tmux kill-window -t "$session:999" 2>/dev/null
@@ -309,6 +309,15 @@ __get_first_window_index() {
     echo "$index" | head -1
   else
     echo "0"
+  fi
+}
+
+__get_current_window_index() {
+  local lookup=$(tmuxifier-tmux list-windows -t "$session:" \
+    -F "#{window_active}:#{window_index}" 2>/dev/null | grep "^1:")
+
+  if [ -n "$lookup" ]; then
+    echo "${lookup/1:}"
   fi
 }
 
